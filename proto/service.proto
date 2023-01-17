@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package proto;
+
+
+option go_package = "example.com/go-tokenservice-grpc;go_tokenservice_grpc";
+
+service TokenService{
+        rpc Create(IdRequest) returns (AckResponse);
+        rpc Drop(IdRequest) returns (AckResponse);
+        rpc Write(WriteRequest) returns (AckResponse);
+        rpc Read(IdRequest) returns (AckResponse);
+        rpc WriteOne(WBroadcastMessage) returns (WBroadcastReturn);
+        rpc ReadOne(RBroadcastMessage) returns (RBroadcastReturn);
+//         rpc ReadBroadcast(RBroadcast) returns (WBroadcast);
+//         rpc WriteBroadcast(WBroadcast) returns (RBroadcast);
+// 
+}
+
+
+
+message RBroadcastMessage {
+    uint64 rid = 1;
+    string id = 2;
+}
+
+message RBroadcastReturn {
+    uint64 rid = 1;
+    uint64 wts = 2;
+    string id = 4;
+    string name = 5;
+    uint64 low = 6;
+    uint64 high = 7;
+    uint64 mid = 8;
+    uint64 val = 9; 
+}
+
+message WBroadcastReturn {
+    string ack = 1;
+    uint64 rid = 2;
+}
+
+message WBroadcastMessage {
+    uint64 rid = 1;
+    uint64 wts = 2;
+    string id = 4;
+    string name = 5;
+    uint64 low = 6;
+    uint64 high = 7;
+    uint64 mid = 8;
+    uint64 val = 9; 
+}
+
+message WriteRequest {
+    string id = 1;
+    string name = 2;
+    uint64 low = 3;
+    uint64 high = 4;
+    uint64 mid = 5;
+    uint64 wts = 6; 
+}
+
+message IdRequest {
+    string id = 1;
+}
+
+message AckResponse {
+    string ack = 1;
+}

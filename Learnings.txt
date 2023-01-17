@@ -1,0 +1,33 @@
+Fail Silent replication=> Keeps on operating even if some servers fail => Ensures High Availability and Fault Tolerance.
+Leader Follower replication => Leader handles the request
+(1, N) registers => 1 writer node and multiple reader nodes.
+
+
+Read-Impose-Write-All protocol 
+    Used to ensure consistency and maintain a uniform view of the data.
+
+
+    During Read :
+    Once we receive a read request to a reader node, we send out a broadcast (Rbroadcast) to all the other reader nodes.
+    We pass a channel as well along with it as well in order to accumulate all the acknowledgements we receive.
+    This Rbroadcast function makes N ReadOne go routines which at the receiving node return the value of the token that it holds.
+    Once the received acks are > N/2, we return the value with the latest timestamp.
+
+FOR READ :
+• The server node that receives this read request needs to return the latest value 
+written to the whole system. To ensure this, a read broadcast is initiated to every 
+node in the system.
+• This read broadcast requires every system to return the value of the appropriate 
+token that they hold.
+• This token value is accompanied by a timestamp.
+• Once the number of values or acknowledgements received by the node reaches 
+beyond a certain N/2 value where N is the number of nodes in the system, the values 
+associated to the latest timestamp is returned as a result of the read request.
+
+
+FOR WRITE :
+• The server node that receives this write request firstly updates the current value of 
+the token along with it’s timestamp.
+• This new value written is then broadcasted across all the nodes in the system.
+• Once we receive acknowledgements more than N/2 from these broadcasts, we 
+respond to the client with an acknowledgement
